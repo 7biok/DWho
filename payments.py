@@ -1,5 +1,10 @@
 ﻿import SimpleQIWI, telebot, time, shelve, requests
 import dop, config, files
+import os
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from google.colab import auth
+from oauth2client.client import GoogleCredentials
 from coinbase.wallet.client import Client
 
 bot = telebot.TeleBot(config.token)
@@ -34,12 +39,12 @@ def creat_bill_qiwi(chat_id, callback_id, message_id, sum, name_good, amount):
 
 def check_oplata_qiwi(chat_id, username, callback_id, first_name):
 	if chat_id in he_client:
-		with open('data/Temp/' + str(chat_id) + 'good_name.txt', encoding='utf-8') as f: name_good = f.read()
-		phone = dop.normal_read_line('data/Temp/' + str(chat_id) + '.txt', 0)
-		token = dop.normal_read_line('data/Temp/' + str(chat_id) + '.txt', 1)
-		amount = dop.normal_read_line('data/Temp/' + str(chat_id) + '.txt', 2)
-		price = dop.normal_read_line('data/Temp/' + str(chat_id) + '.txt', 3)
-		comm = dop.read_my_line('data/Temp/' + str(chat_id) + '.txt', 4)
+		with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_name.txt', encoding='utf-8') as f: name_good = f.read()
+		phone = dop.normal_read_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 0)
+		token = dop.normal_read_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 1)
+		amount = dop.normal_read_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 2)
+		price = dop.normal_read_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 3)
+		comm = dop.read_my_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 4)
 
 		api = SimpleQIWI.QApi(phone=phone, token=token)
 		comment = api.bill(int(price), comm)
@@ -87,7 +92,7 @@ def creat_bill_btc(chat_id, callback_id, message_id, sum, name_good, amount):
 		sum = float(str(sum / btc_price)[:10]) #сколько сатох нужно юзеру оплатить
 		address_for_tranz = client.create_address(account_id)['address'] #получение кошелька для оплты
 
-		with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f:
+		with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f:
 			f.write(str(amount)+ '\n')
 			f.write(str(sum)+ '\n')
 			f.write(address_for_tranz)
@@ -101,10 +106,10 @@ def creat_bill_btc(chat_id, callback_id, message_id, sum, name_good, amount):
 
 def check_oplata_btc(chat_id, username, callback_id, first_name):
 	if chat_id in he_client:
-		with open('data/Temp/' + str(chat_id) + 'good_name.txt', encoding='utf-8') as f: name_good = f.read()
-		amount = dop.normal_read_line('data/Temp/' + str(chat_id) + '.txt', 0)
-		sum = dop.normal_read_line('data/Temp/' + str(chat_id) + '.txt', 1)
-		address = dop.read_my_line('data/Temp/' + str(chat_id) + '.txt', 2)
+		with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_name.txt', encoding='utf-8') as f: name_good = f.read()
+		amount = dop.normal_read_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 0)
+		sum = dop.normal_read_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 1)
+		address = dop.read_my_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 2)
 
 		r = requests.get('https://blockchain.info/q/addressbalance/' + address)
 		s = r.text

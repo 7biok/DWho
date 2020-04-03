@@ -1,5 +1,10 @@
 import telebot, sqlite3, shelve
 import config, dop, files
+import os
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from google.colab import auth
+from oauth2client.client import GoogleCredentials
 
 bot = telebot.TeleBot(config.token)
 
@@ -48,7 +53,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 			elif  ' сообщение если нету username' in message_text:
 				bot.send_message(chat_id, 'Введите новое сообщение которое будет отправляться если у пользователя нету `username`. В тексте вы можете использовать `uname`. Оно автомаически заменится на имя пользователя', parse_mode='MarkDown', reply_markup=key)
 				message = 'userfalse'
-			with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding ='utf-8') as f: f.write(message)
+			with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding ='utf-8') as f: f.write(message)
 			with shelve.open(files.sost_bd) as bd : bd[str(chat_id)] = 1
 
 		elif 'Настройка ассортимента' == message_text:
@@ -79,10 +84,10 @@ def in_adminka(chat_id, message_text, username, name_user):
 
 		elif 'В виде файла' == message_text or  'В виде текста' == message_text:
 			if 'В виде файла' == message_text: 
-				with open('data/Temp/' + str(chat_id) + 'good_format.txt', 'w',  encoding='utf-8') as f: f.write('file')
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_format.txt', 'w',  encoding='utf-8') as f: f.write('file')
 				bot.send_message(chat_id, 'Вы выбрали товар в виде файла\nТеперь введите минимальное количество товара, которое можно купить(т.е меньше этого числа купить не получиться)')
 			elif 'В виде текста' == message_text: 
-				with open('data/Temp/' + str(chat_id) + 'good_format.txt', 'w',  encoding='utf-8') as f: f.write('text')
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_format.txt', 'w',  encoding='utf-8') as f: f.write('text')
 				bot.send_message(chat_id, 'Вы выбрали товар в виде текста!\nТеперь введите минимальное количество товара, которое можно купить(т.е меньше этого числа купить не получиться)')
 			with shelve.open(files.sost_bd) as bd : bd[str(chat_id)] = 4
 
@@ -218,7 +223,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 		elif 'Добавить/заменить данные от биржи' == message_text:
 			key = telebot.types.InlineKeyboardMarkup()
 			key.add(telebot.types.InlineKeyboardButton(text='Вернуться в главное меню админки', callback_data='Вернуться в главное меню админки'))
-			bot.send_message(chat_id, 'Введите *API key* от биржи *coinbase*\n\nГайд по получению: https://telegra.ph/Token-coinbase-08-31', reply_markup=key, parse_mode='Markdown')
+			bot.send_message(chat_id, 'Введите *API key* от биржи *coinbase*\n', reply_markup=key, parse_mode='Markdown')
 			with shelve.open(files.sost_bd) as bd: bd[str(chat_id)] = 17
 
 		elif 'Удалить данные от биржи' == message_text:
@@ -260,10 +265,10 @@ def in_adminka(chat_id, message_text, username, name_user):
 
 		elif 'По всем юзерам' == message_text or  'Только купившим' == message_text:
 			if 'По всем юзерам' == message_text: 
-				with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f:  f.write('all\n')
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f:  f.write('all\n')
 				amount = dop.user_loger() #получение числа юзер
 			elif 'Только купившим' == message_text: 
-				with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f:  f.write('buyers\n')
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f:  f.write('buyers\n')
 				amount = dop.get_amountsbayers() #получение количество покупателей
 			key = telebot.types.InlineKeyboardMarkup()
 			key.add(telebot.types.InlineKeyboardButton(text='Отменить и вернуться в главное меню админки', callback_data='Вернуться в главное меню админки'))
@@ -311,7 +316,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 		elif dop.get_sost(chat_id) is True:
 			with shelve.open(files.sost_bd) as bd: sost_num = bd[str(chat_id)]
 			if sost_num == 1:
-				with open('data/Temp/' + str(chat_id) + '.txt', encoding='utf-8') as f:  what_message = f.read()#достаётся сообщение, ответ на которое нужно изменить
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', encoding='utf-8') as f:  what_message = f.read()#достаётся сообщение, ответ на которое нужно изменить
 				if what_message == 'start':
 					bot.send_message(chat_id, 'Добавлено новое привественное сообщение')
 					shelve.open(files.bot_message_bd)['start'] = message_text
@@ -343,14 +348,14 @@ def in_adminka(chat_id, message_text, username, name_user):
 				with shelve.open(files.sost_bd) as bd: del bd[str(chat_id)]
 
 			elif sost_num == 2:
-				with open('data/Temp/' + str(chat_id) + 'good_name.txt', 'w',  encoding='utf-8') as f: f.write(message_text)
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_name.txt', 'w',  encoding='utf-8') as f: f.write(message_text)
 				key = telebot.types.InlineKeyboardMarkup()
 				key.add(telebot.types.InlineKeyboardButton(text='Отменить и вернуться в главное меню админки', callback_data='Вернуться в главное меню админки'))
 				bot.send_message(chat_id, 'Введите описание для ' + message_text, reply_markup=key)
 				with shelve.open(files.sost_bd) as bd : bd[str(chat_id)] = 3
 
 			elif sost_num == 3:
-				with open('data/Temp/' + str(chat_id) + 'good_description.txt', 'w',  encoding='utf-8') as f: f.write(message_text)
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_description.txt', 'w',  encoding='utf-8') as f: f.write(message_text)
 				user_markup = telebot.types.ReplyKeyboardMarkup(True, True)
 				user_markup.row('В виде файла', 'В виде текста')
 				bot.send_message(chat_id, 'В каком виде будет выдавать товар?\n*В виде файла*? *Например*: zip-архивы(логи), txt-документы(базы)\n\nИли *в виде текст*? *Например:* аккаунты и тд', reply_markup=user_markup, parse_mode='Markdown')
@@ -360,7 +365,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 				try:
 					message = int(message_text)
 					if message  >= 0:
-						with open('data/Temp/' + str(chat_id) + 'good_minimum.txt', 'w',  encoding='utf-8') as f: f.write(str(message_text))
+						with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_minimum.txt', 'w',  encoding='utf-8') as f: f.write(str(message_text))
 						key = telebot.types.InlineKeyboardMarkup()
 						key.add(telebot.types.InlineKeyboardButton(text='Отменить и вернуться в главное меню админки', callback_data='Вернуться в главное меню админки'))
 						bot.send_message(chat_id, 'Минимальное число к покупке - ' + str(message_text) + '\nТеперь введите цену за одну штуку товара в рублях.\nЕсли вы решите принимать оплату btc, то сумма автоматически сконвертируется в сатоши', reply_markup=key)
@@ -371,16 +376,16 @@ def in_adminka(chat_id, message_text, username, name_user):
 			elif sost_num == 5:
 				try:
 					price = int(message_text)
-					with open('data/Temp/' + str(chat_id) + 'good_price.txt', 'w',  encoding='utf-8') as f: f.write(str(message_text))
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_price.txt', 'w',  encoding='utf-8') as f: f.write(str(message_text))
 					key = telebot.types.InlineKeyboardMarkup()
 					key.add(telebot.types.InlineKeyboardButton(text='Добавить товар в магазин', callback_data='Добавить товар в магазин'))
 					key.add(telebot.types.InlineKeyboardButton(text='Отменить и вернуться в главное меню админки', callback_data='Вернуться в главное меню админки'))
 					
-					with open('data/Temp/' + str(chat_id) + 'good_name.txt',  encoding='utf-8') as f: name = f.read()
-					with open('data/Temp/' + str(chat_id) + 'good_description.txt',  encoding='utf-8') as f: description = f.read()
-					with open('data/Temp/' + str(chat_id) + 'good_format.txt',  encoding='utf-8') as f: format = f.read()
-					with open('data/Temp/' + str(chat_id) + 'good_minimum.txt',  encoding='utf-8') as f: minimum = f.read()
-					with open('data/Temp/' + str(chat_id) + 'good_price.txt',  encoding='utf-8') as f: price = f.read()
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_name.txt',  encoding='utf-8') as f: name = f.read()
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_description.txt',  encoding='utf-8') as f: description = f.read()
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_format.txt',  encoding='utf-8') as f: format = f.read()
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_minimum.txt',  encoding='utf-8') as f: minimum = f.read()
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_price.txt',  encoding='utf-8') as f: price = f.read()
 		
 					bot.send_message(chat_id, 'Вы решили добавить следущий товар:\n*Название:* ' + name + '\n*Описание:* ' + description + '\n*Формат товара:* ' + format + '\n*Минимальная количество к  покупке:* ' + minimum + '\n*Цена за единицу:* ' + price + ' руб', reply_markup=key, parse_mode='MarkDown')
 					with shelve.open(files.sost_bd) as bd: del bd[str(chat_id)]
@@ -416,13 +421,13 @@ def in_adminka(chat_id, message_text, username, name_user):
 				else: 
 					key = telebot.types.InlineKeyboardMarkup()
 					key.add(telebot.types.InlineKeyboardButton(text='Отменить и вернуться в главное меню админки', callback_data='Вернуться в главное меню админки'))
-					with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
 					bot.send_message(chat_id, 'Теперь напишите новое описание', reply_markup=key)
 					with shelve.open(files.sost_bd) as bd : bd[str(chat_id)] = 8
 				con.close()
 
 			elif sost_num == 8:	
-				with open('data/Temp/' + str(chat_id) + '.txt', encoding='utf-8') as f: name = f.read()
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', encoding='utf-8') as f: name = f.read()
 				con = sqlite3.connect(files.main_db)
 				cursor = con.cursor()
 				cursor.execute("UPDATE goods SET description = '" + message_text + "' WHERE name = '" + name + "';")
@@ -442,7 +447,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 				cursor.execute("SELECT description FROM goods WHERE name = " + "'" + message_text + "';")
 				for i in cursor.fetchall(): a += 1
 				if a >= 1:
-					with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
 					key = telebot.types.InlineKeyboardMarkup()
 					key.add(telebot.types.InlineKeyboardButton(text = 'Отменить и вернуться в главное меню админки', callback_data = 'Вернуться в главное меню админки'))
 					bot.send_message(chat_id, 'Теперь напишите новую цену', reply_markup=key)
@@ -453,7 +458,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 			elif sost_num == 10:
 				try:
 					message_text = int(message_text)
-					with open('data/Temp/' + str(chat_id) + '.txt', encoding='utf-8') as f: name = f.read()
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', encoding='utf-8') as f: name = f.read()
 					con = sqlite3.connect(files.main_db)
 					cursor = con.cursor()
 					cursor.execute("UPDATE goods SET price = '" + str(message_text) + "' WHERE name = '" + name + "';")
@@ -469,7 +474,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 
 			elif sost_num == 11:
 				if message_text in dop.get_goods():
-					with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
+					with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
 					key = telebot.types.InlineKeyboardMarkup()
 					key.add(telebot.types.InlineKeyboardButton(text = 'Остановить загрузку', callback_data = 'Остановить загрузку'))
 					key.add(telebot.types.InlineKeyboardButton(text = 'Отменить и вернуться в главное меню админки', callback_data = 'Вернуться в главное меню админки'))
@@ -483,7 +488,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 				else: bot.send_message(chat_id, 'Такой позиции в боте не создано!')
 
 			elif sost_num == 13:
-				with open('data/Temp/' + str(chat_id) + '.txt', encoding='utf-8') as f: good_name = f.read()
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', encoding='utf-8') as f: good_name = f.read()
 				stored = dop.get_stored(good_name)
 				with open(stored, 'a', encoding ='utf-8') as f: f.write(message_text + '\n')
 
@@ -495,8 +500,8 @@ def in_adminka(chat_id, message_text, username, name_user):
 					cursor.execute("SELECT number, token FROM qiwi_data WHERE number = " + str(message_text) + ";")
 					if len(cursor.fetchall()) > 0: bot.send_message(chat_id,'Такой номер уже есть в базе данных!')
 					elif 15 >= len(message_text) >= 10:
-						with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
-						bot.send_message(chat_id, 'Теперь введите токен\n\n*Гайд по получению токена - *https://telegra.ph/Kak-poluchit-token-ot-kivi-koshelka-08-31', parse_mode='Markdown')
+						with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
+						bot.send_message(chat_id, 'Теперь введите токен\n', parse_mode='Markdown')
 						with shelve.open(files.sost_bd) as bd : bd[str(chat_id)] = 15
 					else: bot.send_message(chat_id, 'Вы ввели неправильный номер!')
 					con.close()
@@ -504,7 +509,7 @@ def in_adminka(chat_id, message_text, username, name_user):
 					bot.send_message(chat_id, 'В номере не должно быть букв!\n\nОтправьте *номер* киви кошелька. Его вводите *без плюса*. Напрмер 7904 или 3757', parse_mode='Markdown')
 
 			elif sost_num == 15:
-				with open('data/Temp/' + str(chat_id) + '.txt', encoding='utf-8') as f: phone = f.read()
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', encoding='utf-8') as f: phone = f.read()
 				if dop.check_qiwi_valid(phone, message_text) is False:
 					key = telebot.types.InlineKeyboardMarkup()
 					key.add(telebot.types.InlineKeyboardButton(text = 'Вернуться в главное меню админки', callback_data = 'Вернуться в главное меню админки'))
@@ -541,14 +546,14 @@ def in_adminka(chat_id, message_text, username, name_user):
 				con.close()
 
 			elif sost_num == 17:
-				with open('data/Temp/' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'w', encoding='utf-8') as f: f.write(message_text)
 				key = telebot.types.InlineKeyboardMarkup()
 				key.add(telebot.types.InlineKeyboardButton(text = 'Вернуться в главное меню админки', callback_data = 'Вернуться в главное меню админки'))
-				bot.send_message(chat_id, 'Введите *API Secret*\n\nГайд по получению: https://telegra.ph/Token-coinbase-08-31', reply_markup=key, parse_mode='Markdown')
+				bot.send_message(chat_id, 'Введите *API Secret*\n', reply_markup=key, parse_mode='Markdown')
 				with shelve.open(files.sost_bd) as bd : bd[str(chat_id)] = 18
 
 			elif sost_num == 18:
-				with open('data/Temp/' + str(chat_id) + '.txt', encoding='utf-8') as f: api_key = f.read()
+				with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', encoding='utf-8') as f: api_key = f.read()
 				if dop.check_coinbase_valid(api_key, message_text) is True:
 					con = sqlite3.connect(files.main_db)
 					cursor = con.cursor()
@@ -568,10 +573,10 @@ def in_adminka(chat_id, message_text, username, name_user):
 			elif sost_num == 19:
 				try:
 					if int(message_text) > 0:
-						with open('data/Temp/' + str(chat_id) + '.txt', 'a', encoding='utf-8') as f: f.write(message_text)
+						with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 'a', encoding='utf-8') as f: f.write(message_text)
 						key = telebot.types.InlineKeyboardMarkup()
 						key.add(telebot.types.InlineKeyboardButton(text='Отменить и вернуться в главное меню админки', callback_data='Вернуться в главное меню админки'))
-						group = dop.normal_read_line('data/Temp/' + str(chat_id) + '.txt', 0)
+						group = dop.normal_read_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 0)
 						if group == 'all': group = 'по всем'
 						elif group == 'buyers': group = 'по покупателям'
 						bot.send_message(chat_id, 'Вы выбрали рассылку ' + group + '\nПо ' + message_text + ' юзерам\nТеперь введите любой текст рассылки. Он будет разослан ровно в таком же виде, в каком вы его отправите')
@@ -582,8 +587,8 @@ def in_adminka(chat_id, message_text, username, name_user):
 				except: bot.send_message(chat_id, 'Количество юзеров для рассылки введите числом заново!')
 
 			elif sost_num == 20:
-				group = dop.normal_read_line('data/Temp/' + str(chat_id) + '.txt', 0)
-				amount_users = dop.read_my_line('data/Temp/' + str(chat_id) + '.txt', 1)
+				group = dop.normal_read_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 0)
+				amount_users = dop.read_my_line('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', 1)
 				message_text = dop.rasl(group, amount_users, message_text) #получаются итоги рассылки
 
 				user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
@@ -646,11 +651,11 @@ def ad_inline(callback_data, chat_id, message_id):
 		bot.send_message(chat_id, 'Вы вошли в админку бота!\nЧтобы выйти из неё, нажмите /start', reply_markup=user_markup)
 
 	elif callback_data == 'Добавить товар в магазин':
-		with open('data/Temp/' + str(chat_id) + 'good_name.txt',  encoding='utf-8') as f: name = f.read()
-		with open('data/Temp/' + str(chat_id) + 'good_description.txt',  encoding='utf-8') as f: description = f.read()
-		with open('data/Temp/' + str(chat_id) + 'good_format.txt',  encoding='utf-8') as f: format = f.read()
-		with open('data/Temp/' + str(chat_id) + 'good_minimum.txt',  encoding='utf-8') as f: minimum = f.read()
-		with open('data/Temp/' + str(chat_id) + 'good_price.txt',  encoding='utf-8') as f: price = f.read()
+		with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_name.txt',  encoding='utf-8') as f: name = f.read()
+		with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_description.txt',  encoding='utf-8') as f: description = f.read()
+		with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_format.txt',  encoding='utf-8') as f: format = f.read()
+		with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_minimum.txt',  encoding='utf-8') as f: minimum = f.read()
+		with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + 'good_price.txt',  encoding='utf-8') as f: price = f.read()
 
 		con = sqlite3.connect(files.main_db)
 		cursor = con.cursor()
@@ -664,10 +669,10 @@ def ad_inline(callback_data, chat_id, message_id):
 		bot.delete_message(chat_id, message_id) #удаляется старое сообщение
 		bot.send_message(chat_id, 'Товар был успешно добавлен', reply_markup=user_markup)
 		
-		with open('data/goods/' + name + '.txt', 'w',  encoding ='utf-8') as f: pass #создаёся файл для товара
+		with open('https://drive.google.com/drive/folders/1tgbHgLnB1BbjDTLCTLE_f3pRZ_uX6HAK?usp=sharing' + name + '.txt', 'w',  encoding ='utf-8') as f: pass #создаёся файл для товара
 
 	elif callback_data == 'Остановить загрузку':
-		good_name = open('data/Temp/' + str(chat_id) + '.txt', encoding ='utf-8').read()
+		good_name = open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', encoding ='utf-8').read()
 		bot.delete_message(chat_id, message_id) #удаляется старое сообщение
 		con = sqlite3.connect(files.main_db)
 		cursor = con.cursor()
@@ -731,7 +736,7 @@ def ad_inline(callback_data, chat_id, message_id):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~работа с файлами~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#                                                                                                           ВyВо0р                                                                                                                                                 
 def new_files(document_id, chat_id):
-	with open('data/Temp/' + str(chat_id) + '.txt', encoding='utf-8') as f: good_name = f.read()
+	with open('https://drive.google.com/open?id=1F7UFARDfsTKih-tdJnXH6KlzikWfO9tz' + str(chat_id) + '.txt', encoding='utf-8') as f: good_name = f.read()
 	stored = dop.get_stored(good_name)
 	with open(stored, 'a',  encoding='utf-8') as f: f.write(document_id + '\n')
 	

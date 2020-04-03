@@ -2,6 +2,12 @@
 import files, config
 bot = telebot.TeleBot(config.token)
 from coinbase.wallet.client import Client
+import os
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from google.colab import auth
+from oauth2client.client import GoogleCredentials
+from coinbase.wallet.client import Client
 
 def it_first(chat_id):
 	try:
@@ -25,7 +31,6 @@ def main(chat_id):
 
 На *данный* момент вы находитесь в админке бота. В следущий раз, чтоб в неё попасть нужно будет набрать /adm
 Чтобы из неё выйти, нажмите /start
-*Полный гайд по настройке бота*(рекомендую ознакомиться) - https://telegra.ph/Polnaya-nastrojka-08-31
 """, parse_mode='MarkDown', reply_markup=user_markup)
 
 	with shelve.open(files.payments_bd) as bd:
